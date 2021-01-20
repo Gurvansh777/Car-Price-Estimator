@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "855821305481",
+    "project_id": "car-price-estimator",
+    "storage_bucket": "car-price-estimator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855821305481:android:a78307bdc5ce5b36dba858",
+        "android_client_info": {
+          "package_name": "com.example.carpriceestimator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855821305481-bvuis6mvdm5kucff3uur0i5pgehk6jk8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnNpRMs1uIzX6l-RMFSiWHqy2aaQN8RrE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855821305481-bvuis6mvdm5kucff3uur0i5pgehk6jk8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
