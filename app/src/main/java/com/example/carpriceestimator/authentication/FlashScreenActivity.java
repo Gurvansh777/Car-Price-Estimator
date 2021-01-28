@@ -15,15 +15,15 @@ public class FlashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flash_screen);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
-         new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent i= new Intent(FlashScreenActivity.this, MainActivity.class);
-                startActivity(i); //start new activity
-                finish();
-            }
-        }, 3000);
+         new Handler().postDelayed(() -> {
+             Intent i= new Intent(FlashScreenActivity.this, LoginActivity.class);
+             startActivity(i); //start new activity
+             finish();
+         }, 3000);
 
     }
 }
