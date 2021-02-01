@@ -37,7 +37,7 @@ public class ForgetPasswordFragment extends Fragment {
         resetButton = view.findViewById(R.id.buttonResetPassword);
         resetPasswordEmailTextView = view.findViewById(R.id.edittextResetEmail);
 
-        resetPasswordEmailTextView.setOnClickListener(v -> {
+        resetButton.setOnClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             if(checkConnection()){
                 ResetPassword();
