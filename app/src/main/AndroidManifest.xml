@@ -4,20 +4,19 @@
 
     <application
         android:allowBackup="true"
-        android:fullBackupContent="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.CarPriceEstimator">
         <activity android:name=".authentication.FlashScreenActivity">
+
+        </activity>
+        <activity android:name=".authentication.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".authentication.LoginActivity" >
-
         </activity>
         <activity
             android:name=".MainActivity"
