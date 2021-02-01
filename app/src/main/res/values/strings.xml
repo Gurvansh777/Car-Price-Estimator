@@ -7,4 +7,11 @@
     <string name="signup">New user? Click Here to SignUp</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="facebook">Facebook</string>
+    <string name="logo">logo</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">Login</string>
+    <string name="or_connect_with">---------------OR CONNECT WITH--------------</string>
+    <string name="google">Google</string>
 </resources>
