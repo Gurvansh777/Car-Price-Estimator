@@ -27,7 +27,7 @@ public class HomeFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences(Constants.MY_PREFERENCES, Context.MODE_PRIVATE);
 
         final TextView textView = root.findViewById(R.id.tvHome);
-        textView.setText(sharedPreferences.getString(Constants.USER_EMAIL, ""));
+        textView.setText("User: "+ sharedPreferences.getString(Constants.USER_EMAIL, ""));
 
 //        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
 //            @Override
