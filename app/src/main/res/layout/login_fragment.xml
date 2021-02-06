@@ -26,7 +26,8 @@
     <TextView
         android:id="@+id/textViewSignUp"
         android:layout_width="200dp"
-        android:layout_height="34dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         android:shadowColor="@color/purple_500"
         android:shadowDx=".5"
@@ -37,7 +38,7 @@
         android:textColor="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.075"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button

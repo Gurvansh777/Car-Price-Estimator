@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#003E4751"
+    android:padding="1dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="232dp"
+        android:clipChildren="true"
+        app:cardBackgroundColor="@color/ThemeFront"
+        app:cardCornerRadius="@dimen/card_view_corner_radius"
+        app:cardPreventCornerOverlap="false"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/carimage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:backgroundTint="#65000000"
+            android:backgroundTintMode="src_over"
+            android:foregroundTint="#C4000000"
+            android:src="@drawable/car"
+            android:foregroundTintMode="src_in"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/carName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:background="@drawable/black_gradient"
+            android:gravity="start|bottom"
+            android:paddingHorizontal="@dimen/grid_item_horizontal_space"
+            android:paddingTop="@dimen/heading_padding_top"
+            android:paddingBottom="45dp"
+            android:text=""
+            android:textAppearance="@style/H1" />
+
+        <TextView
+            android:id="@+id/carVIN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="@dimen/grid_item_horizontal_space"
+            android:layout_marginBottom="27dp"
+            android:alpha="0.75"
+            android:gravity="start|bottom"
+            android:text=""
+            android:textAppearance="@style/H3" />
+
+        <TextView
+            android:id="@+id/carSpecifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="@dimen/grid_item_horizontal_space"
+            android:layout_marginBottom="27dp"
+            android:alpha="0.75"
+            android:gravity="start|bottom"
+            android:text=""
+            android:textAppearance="@style/H3" />
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
