@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
+    android:backgroundTint="#65000000"
+    android:backgroundTintMode="src_over"
     tools:context=".ui.more.MoreFragment">
 
     <TextView
