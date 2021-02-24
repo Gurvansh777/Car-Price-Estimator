@@ -1,6 +1,5 @@
 package com.example.carpriceestimator.ui.home;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,11 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -26,35 +21,39 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.example.carpriceestimator.Constants;
 import com.example.carpriceestimator.R;
+import com.example.carpriceestimator.api.RetrofitBuilder;
+import com.example.carpriceestimator.api.VpicEndPointInterface;
+import com.example.carpriceestimator.entity.Car;
+import com.example.carpriceestimator.entity.DecodedCar;
+import com.example.carpriceestimator.utility.CarDecoder;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
-import com.google.firebase.ml.vision.text.RecognizedLanguage;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static android.content.ContentValues.TAG;
-import static android.content.Context.CAMERA_SERVICE;
 
 public class HomeFragment extends Fragment {
 
@@ -62,6 +61,12 @@ public class HomeFragment extends Fragment {
     FirebaseVisionImage image = null;
     Bitmap selectedImage;
     ImageView vinImage;
+
+    //VIN Edit text
+    EditText etVIN;
+    TextView carName;
+    TextView carVIN;
+
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -80,9 +85,12 @@ public class HomeFragment extends Fragment {
         textView.setText(String.format("User: %s", sharedPreferences.getString(Constants.USER_EMAIL, "")));
 
         Button cameraButton = root.findViewById(R.id.btnCamera);
-        TextView carName = root.findViewById(R.id.carName);
-        TextView carVIN = root.findViewById(R.id.carVIN);
+        Button detailButton = root.findViewById(R.id.btnCarDetail);
+
+        carName = root.findViewById(R.id.carName);
+        carVIN = root.findViewById(R.id.carVIN);
         vinImage = root.findViewById(R.id.carimage);
+        etVIN = root.findViewById(R.id.etVIN);
 
         //Dummy data to represent ui//
         carName.setText("Porsche Carrera 991");
@@ -92,7 +100,37 @@ public class HomeFragment extends Fragment {
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             selectImage(getContext());
         });
+
+        detailButton.setOnClickListener( v -> {
+            getCarDetails();
+        });
         return root;
+    }
+
+    private void getCarDetails() {
+        Retrofit retrofit = RetrofitBuilder.getInstance();
+        VpicEndPointInterface apiService = retrofit.create(VpicEndPointInterface.class);
+
+        String vin = etVIN.getText().toString().trim();
+
+        Call<Car> call = apiService.getCar(vin);
+        call.enqueue(new Callback<Car>() {
+            @Override
+            public void onResponse(Call<Car> call, Response<Car> response) {
+                int statusCode = response.code();
+                Car car = response.body();
+                DecodedCar decodedCar = CarDecoder.decode(car);
+                //FINAL CAR DETAIL
+                Log.i("CAR", decodedCar.toString());
+                carVIN.setText(decodedCar.getVin());
+                carName.setText(decodedCar.getMake() + "\n" + decodedCar.getModel());
+            }
+
+            @Override
+            public void onFailure(Call<Car> call, Throwable t) {
+                // Log error here since request failed
+            }
+        });
     }
 
     private void selectImage(Context context) {
