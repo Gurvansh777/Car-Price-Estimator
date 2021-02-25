@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundColor"
     android:backgroundTint="#2F131313"
+    android:animateLayoutChanges="true"
     android:backgroundTintMode="add"
     tools:context=".ui.home.HomeFragment">
 

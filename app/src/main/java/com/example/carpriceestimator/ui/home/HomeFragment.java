@@ -64,12 +64,16 @@ public class HomeFragment extends Fragment {
     FirebaseVisionImage image = null;
     Bitmap selectedImage;
     ImageView vinImage;
+    String picturePath;
     ConstraintLayout carDetailsLayout;
+    boolean vinScanned = false;
+    int FLAG_TAKE_IMAGE = 0;
+
     //VIN Edit text
     EditText etVIN;
     TextView carName;
     TextView carVIN;
-    TextView make, model, modelYear, bodyClass, doors, maufacturer, price;
+    TextView make, model, modelYear, bodyClass, doors, manufacturer, price;
 
     //VM
     private HomeViewModel homeViewModel;
@@ -99,7 +103,7 @@ public class HomeFragment extends Fragment {
         model = root.findViewById(R.id.textViewCarModelData);
         modelYear = root.findViewById(R.id.textViewCarModelYearData);
         doors = root.findViewById(R.id.textViewDoorsData);
-        maufacturer = root.findViewById(R.id.textViewCarManufactureNameData);
+        manufacturer = root.findViewById(R.id.textViewCarManufactureNameData);
         price = root.findViewById(R.id.textViewPriceData);
         progressBar = root.findViewById(R.id.progressBarHome);
 
@@ -110,8 +114,6 @@ public class HomeFragment extends Fragment {
         });
 
         detailButton.setOnClickListener(v -> getCarDetails(etVIN.getText().toString().trim()));
-
-
         return root;
     }
 
@@ -125,11 +127,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<Car> call, Response<Car> response) {
                 progressBar.setVisibility(View.INVISIBLE);
-                int statusCode = response.code();
                 Car car = response.body();
                 try {
                     DecodedCar decodedCar = CarDecoder.decode(car);
-                    if(decodedCar != null){
+                    if (decodedCar != null) {
                         homeViewModel.insert(decodedCar);
                     }
                     //FINAL CAR DETAIL
@@ -141,8 +142,16 @@ public class HomeFragment extends Fragment {
                     modelYear.setText(decodedCar.getModelYear());
                     bodyClass.setText(decodedCar.getBodyClass());
                     doors.setText(String.valueOf(decodedCar.getDoors()));
-                    maufacturer.setText(decodedCar.getManufactureName());
+                    manufacturer.setText(decodedCar.getManufactureName());
                     price.setText("TO BE IMPLEMENTED");
+                    if(FLAG_TAKE_IMAGE == 0) {
+                        vinImage.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                        selectedImage = null;
+                    }
+                    if(FLAG_TAKE_IMAGE == 1){
+                        vinImage.setImageBitmap(selectedImage);
+                        FLAG_TAKE_IMAGE = 0;
+                    }
                     carDetailsLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     Toast.makeText(getContext(), "Please try to scan again or enter the VIN in text.", Toast.LENGTH_SHORT).show();
@@ -163,39 +172,53 @@ public class HomeFragment extends Fragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Choose your profile picture");
-        builder.setItems(options, new DialogInterface.OnClickListener() {
+        builder.setItems(options, (dialog, item) -> {
 
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-
-                if (options[item].equals("Take Photo")) {
-                    if(ContextCompat.checkSelfPermission(requireContext(),
-                            Manifest.permission.CAMERA)
-                            != PackageManager.PERMISSION_GRANTED)
-                    {
-                        requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
-                    }
-                    else {
-                        Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(takePicture, 0);
-                    }
-                } else if (options[item].equals("Choose from Gallery")) {
-
-                    if(ContextCompat.checkSelfPermission(requireContext(),
-                            Manifest.permission.READ_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED)
-                    {
-                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                    }
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    pickPhoto.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    startActivityForResult(pickPhoto, 1);
-                } else if (options[item].equals("Cancel")) {
-                    dialog.dismiss();
+            if (options[item].equals("Take Photo")) {
+                if (ContextCompat.checkSelfPermission(requireContext(),
+                        Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, 10);
+                } else {
+                    FLAG_TAKE_IMAGE = 1;
+                    Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(takePicture, 0);
                 }
+
+            } else if (options[item].equals("Choose from Gallery")) {
+
+                if (ContextCompat.checkSelfPermission(requireContext(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 20);
+                }
+                else {
+                    FLAG_TAKE_IMAGE = 0;
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    pickPhoto.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                    startActivityForResult(pickPhoto, 1);
+                }
+            } else if (options[item].equals("Cancel")) {
+                dialog.dismiss();
             }
         });
         builder.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 0) {
+            Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(takePicture, 10);
+        }
+
+        if(requestCode == 1){
+            Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickPhoto.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+            startActivityForResult(pickPhoto, 20);
+        }
     }
 
     @Override
@@ -205,7 +228,6 @@ public class HomeFragment extends Fragment {
                 case 0:
                     if (resultCode == RESULT_OK && data != null) {
                         selectedImage = (Bitmap) data.getExtras().get("data");
-                        vinImage.setImageBitmap(selectedImage);
                         image = FirebaseVisionImage.fromBitmap(selectedImage);
                         recognizeTextCloud(image);
                     }
@@ -222,8 +244,7 @@ public class HomeFragment extends Fragment {
                             if (cursor != null) {
                                 cursor.moveToFirst();
                                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                                String picturePath = cursor.getString(columnIndex);
-                                vinImage.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                                picturePath = cursor.getString(columnIndex);
                                 image = FirebaseVisionImage.fromBitmap(BitmapFactory.decodeFile(picturePath));
                                 recognizeTextCloud(image);
                             }
@@ -233,6 +254,7 @@ public class HomeFragment extends Fragment {
             }
         }
     }
+
 
     private void recognizeTextCloud(FirebaseVisionImage image) {
         FirebaseVisionCloudTextRecognizerOptions options = new FirebaseVisionCloudTextRecognizerOptions.Builder()
@@ -251,22 +273,29 @@ public class HomeFragment extends Fragment {
                             Point[] cornerPoints = block.getCornerPoints();
 
                             for (FirebaseVisionText.Line line : block.getLines()) {
+                                String text = block.getText();
+                                text = text.replaceAll("\\s+", "");
+                                if (text.matches("(?=.*\\d|=.*[A-Z])(?=.*[A-Z])[A-Z0-9]{17}")) {
+                                    vinScanned = true;
+                                    getCarDetails(line.getText());
+                                }
                                 for (FirebaseVisionText.Element element : line.getElements()) {
                                     String textBlock = element.getText();
                                     textBlock = textBlock.replaceAll("\\s+", "");
-                                    Log.d("MLBlock", textBlock.toString());
-
+                                    Log.d("MLBlock", textBlock);
                                     if (textBlock.matches("(?=.*\\d|=.*[A-Z])(?=.*[A-Z])[A-Z0-9]{17}")) {
+                                        vinScanned = true;
                                         getCarDetails(textBlock);
                                     }
                                 }
                             }
                         }
+                        if (!vinScanned) {
+                            Toast.makeText(getContext(), "Please try to scan again or enter the VIN in text.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // Task failed with an exception
-                    // ...
                 });
     }
 }

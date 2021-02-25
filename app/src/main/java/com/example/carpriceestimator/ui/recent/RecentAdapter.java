@@ -40,7 +40,7 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.RecentRecy
 
     @Override
     public void onBindViewHolder(@NonNull RecentRecycler holder, int position) {
-        holder.manufacturer.setText(carList.get(position).getMake());
+        holder.manufacturer.setText(carList.get(position).getManufactureName());
         holder.doors.setText(String.valueOf(carList.get(position).getDoors()));
         holder.modelYear.setText(String.valueOf(carList.get(position).getModelYear()));
         holder.bodyClass.setText(carList.get(position).getBodyClass());
