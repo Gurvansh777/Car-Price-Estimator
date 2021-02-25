@@ -8,6 +8,25 @@ public class DecodedCar {
     private String modelYear;
     private String bodyClass;
     private int doors;
+    private int price = 0;
+
+    public DecodedCar(String vin, String make, String manufactureName, String model, String modelYear, String bodyClass, int doors, int price) {
+        this.vin = vin;
+        this.make = make;
+        this.manufactureName = manufactureName;
+        this.model = model;
+        this.modelYear = modelYear;
+        this.bodyClass = bodyClass;
+        this.doors = doors;
+        this.price = price;
+    }
+
+    public DecodedCar() {
+    }
+
+    public int getPrice() { return price; }
+
+    public void setPrice(int price) {this.price = price; }
 
     public String getVin() {
         return vin;
