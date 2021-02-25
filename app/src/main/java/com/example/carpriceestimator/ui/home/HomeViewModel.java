@@ -1,19 +1,29 @@
 package com.example.carpriceestimator.ui.home;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+import com.example.carpriceestimator.db.CarsRepository;
+import com.example.carpriceestimator.entity.DecodedCar;
 
-    private MutableLiveData<String> mText;
+import java.util.List;
 
-    public HomeViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+public class HomeViewModel extends AndroidViewModel {
+
+    private LiveData<List<DecodedCar>> decodedCarsList;
+    private CarsRepository carsRepository;
+
+    public HomeViewModel(@NonNull Application application) {
+        super(application);
+        carsRepository = new CarsRepository(application);
+        decodedCarsList = carsRepository.getAllDecodedCars();
     }
 
-    public LiveData<String> getText() {
-        return mText;
-    }
+    LiveData<List<DecodedCar>> getDecodedCarsList() { return this.decodedCarsList; }
+
+    public void insert(DecodedCar decodedCar) { carsRepository.insert(decodedCar); }
+
 }

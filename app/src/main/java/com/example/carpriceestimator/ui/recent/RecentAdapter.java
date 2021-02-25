@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.carpriceestimator.R;
 import com.example.carpriceestimator.entity.DecodedCar;
 
@@ -32,14 +33,14 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.RecentRecy
         viewHolder.modelYear = itemView.findViewById(R.id.textViewCarModelYearData);
         viewHolder.doors = itemView.findViewById(R.id.textViewDoorsData);
         viewHolder.carMake = itemView.findViewById(R.id.carName);
-        viewHolder.maufacturer = itemView.findViewById(R.id.textViewCarManufactureNameData);
+        viewHolder.manufacturer = itemView.findViewById(R.id.textViewCarManufactureNameData);
         viewHolder.price = itemView.findViewById(R.id.textViewPriceData);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecentRecycler holder, int position) {
-        holder.maufacturer.setText(carList.get(position).getMake());
+        holder.manufacturer.setText(carList.get(position).getMake());
         holder.doors.setText(String.valueOf(carList.get(position).getDoors()));
         holder.modelYear.setText(String.valueOf(carList.get(position).getModelYear()));
         holder.bodyClass.setText(carList.get(position).getBodyClass());
@@ -56,7 +57,7 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.RecentRecy
     }
 
     public static class RecentRecycler extends RecyclerView.ViewHolder {
-        TextView make, model, modelYear, bodyClass, vin, doors, maufacturer, price, carMake;
+        TextView make, model, modelYear, bodyClass, vin, doors, manufacturer, price, carMake;
         public RecentRecycler(@NonNull View itemView) {
             super(itemView);
         }

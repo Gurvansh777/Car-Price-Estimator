@@ -6,13 +6,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitBuilder {
-
+    public static Retrofit INSTANCE = null;
     private RetrofitBuilder(){}
 
     public static Retrofit getInstance(){
-        return new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        if (INSTANCE == null) {
+            INSTANCE = new Retrofit.Builder()
+                    .baseUrl(Constants.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return INSTANCE;
     }
 }

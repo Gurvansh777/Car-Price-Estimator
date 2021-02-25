@@ -14,29 +14,24 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.util.SparseArray;
-import android.util.SparseIntArray;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
-import android.view.Surface;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.carpriceestimator.Constants;
 import com.example.carpriceestimator.R;
@@ -45,24 +40,15 @@ import com.example.carpriceestimator.api.VpicEndPointInterface;
 import com.example.carpriceestimator.entity.Car;
 import com.example.carpriceestimator.entity.DecodedCar;
 import com.example.carpriceestimator.utility.CarDecoder;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.text.Text;
-import com.google.android.gms.vision.text.TextBlock;
-import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,7 +57,6 @@ import retrofit2.Retrofit;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class HomeFragment extends Fragment {
 
@@ -86,11 +71,17 @@ public class HomeFragment extends Fragment {
     TextView carVIN;
     TextView make, model, modelYear, bodyClass, doors, maufacturer, price;
 
+    //VM
+    private HomeViewModel homeViewModel;
+    ProgressBar progressBar;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         sharedPreferences = getActivity().getSharedPreferences(Constants.MY_PREFERENCES, Context.MODE_PRIVATE);
+
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         final TextView textView = root.findViewById(R.id.tvHome);
         textView.setText(String.format("User: %s", sharedPreferences.getString(Constants.USER_EMAIL, "")));
@@ -110,6 +101,7 @@ public class HomeFragment extends Fragment {
         doors = root.findViewById(R.id.textViewDoorsData);
         maufacturer = root.findViewById(R.id.textViewCarManufactureNameData);
         price = root.findViewById(R.id.textViewPriceData);
+        progressBar = root.findViewById(R.id.progressBarHome);
 
         carDetailsLayout.setVisibility(View.INVISIBLE);
         cameraButton.setOnClickListener(v -> {
@@ -117,15 +109,14 @@ public class HomeFragment extends Fragment {
             selectImage(getContext());
         });
 
-        detailButton.setOnClickListener(v -> {
-            getCarDetails(etVIN.getText().toString().trim());
-        });
+        detailButton.setOnClickListener(v -> getCarDetails(etVIN.getText().toString().trim()));
 
 
         return root;
     }
 
     private void getCarDetails(String vin) {
+        progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = RetrofitBuilder.getInstance();
         VpicEndPointInterface apiService = retrofit.create(VpicEndPointInterface.class);
 
@@ -133,10 +124,14 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<Car>() {
             @Override
             public void onResponse(Call<Car> call, Response<Car> response) {
+                progressBar.setVisibility(View.INVISIBLE);
                 int statusCode = response.code();
                 Car car = response.body();
                 try {
                     DecodedCar decodedCar = CarDecoder.decode(car);
+                    if(decodedCar != null){
+                        homeViewModel.insert(decodedCar);
+                    }
                     //FINAL CAR DETAIL
                     Log.i("CAR", decodedCar.toString());
                     carVIN.setText(decodedCar.getVin());
@@ -151,11 +146,13 @@ public class HomeFragment extends Fragment {
                     carDetailsLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     Toast.makeText(getContext(), "Please try to scan again or enter the VIN in text.", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
 
             @Override
             public void onFailure(Call<Car> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
                 // Log error here since request failed
             }
         });
@@ -267,12 +264,9 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Task failed with an exception
-                        // ...
-                    }
+                .addOnFailureListener(e -> {
+                    // Task failed with an exception
+                    // ...
                 });
     }
 }

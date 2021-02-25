@@ -1,7 +1,15 @@
 package com.example.carpriceestimator.entity;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "car")
 public class DecodedCar {
-    private String vin;
+    @NonNull
+    @PrimaryKey()
+    private String vin = "";
     private String make;
     private String manufactureName;
     private String model;
@@ -10,6 +18,7 @@ public class DecodedCar {
     private int doors;
     private int price = 0;
 
+    @Ignore
     public DecodedCar(String vin, String make, String manufactureName, String model, String modelYear, String bodyClass, int doors, int price) {
         this.vin = vin;
         this.make = make;
