@@ -6,4 +6,14 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/title_home" />
 
+    <item
+        android:id="@+id/navigation_recent"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:title="@string/title_Recent" />
+
+    <item
+        android:id="@+id/navigation_more"
+        android:icon="@android:drawable/ic_menu_more"
+        android:title="@string/title_More" />
+
 </menu>

@@ -1,5 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/authentication_navigation">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/authentication_navigation"
+    app:startDestination="@id/loginFragment">
 
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.carpriceestimator.authentication.frags.login.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_close_exit" />
+        <action
+            android:id="@+id/action_loginFragment_to_usernameEmailFragment"
+            app:destination="@id/usernameEmailFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.carpriceestimator.authentication.frags.signup.SignUpFragment"
+        android:label="sign_up_fragment"
+        tools:layout="@layout/sign_up_fragment" >
+        <action
+            android:id="@+id/action_signUpFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_signUpFragment_to_usernameEmailFragment"
+            app:destination="@id/usernameEmailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/usernameEmailFragment"
+        android:name="com.example.carpriceestimator.authentication.frags.login.UsernameEmailFragment"
+        android:label="fragment_username_email"
+        tools:layout="@layout/fragment_username_email" >
+        <action
+            android:id="@+id/action_usernameEmailFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_usernameEmailFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_usernameEmailFragment_to_forgetPasswordFragment"
+            app:destination="@id/forgetPasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/forgetPasswordFragment"
+        android:name="com.example.carpriceestimator.authentication.frags.forgetpassword.ForgetPasswordFragment"
+        android:label="forget_password_fragment"
+        tools:layout="@layout/forget_password_fragment" >
+        <action
+            android:id="@+id/action_forgetPasswordFragment_to_usernameEmailFragment"
+            app:destination="@id/usernameEmailFragment" />
+        <action
+            android:id="@+id/action_forgetPasswordFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+    </fragment>
 </navigation>

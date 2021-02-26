@@ -3,4 +3,21 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="login_start">Welcome</string>
+    <string name="signup">New user? Click Here to SignUp</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="facebook">Facebook</string>
+    <string name="logo">logo</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">Login</string>
+    <string name="or_connect_with">---------------OR CONNECT WITH--------------</string>
+    <string name="google">Google</string>
+    <string name="title_Recent">Recent</string>
+    <string name="title_More">More</string>
+    <string name="vin_info_message">Please enter VIN or click picture</string>
+    <string name="vin">VIN</string>
+    <string name="get_detail">GET DETAILS</string>
+    <string name="logout">Logout</string>
 </resources>

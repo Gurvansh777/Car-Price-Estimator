@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#003E4751"
+    android:orientation="vertical"
+    android:padding="1dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="232dp"
+        android:clipChildren="true"
+        app:cardBackgroundColor="@color/ThemeFront"
+        app:cardCornerRadius="@dimen/card_view_corner_radius"
+        app:cardPreventCornerOverlap="false">
+
+        <ImageView
+            android:id="@+id/carimage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:backgroundTint="#65000000"
+            android:backgroundTintMode="src_over"
+            android:foregroundTint="#C4000000"
+            android:foregroundTintMode="src_in"
+            android:scaleType="centerCrop"
+            android:src="@drawable/car" />
+
+        <TextView
+            android:id="@+id/carName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:background="@drawable/black_gradient"
+            android:gravity="start|bottom"
+            android:paddingHorizontal="@dimen/grid_item_horizontal_space"
+            android:paddingTop="@dimen/heading_padding_top"
+            android:paddingBottom="45dp"
+            android:text=""
+            android:textAppearance="@style/H1" />
+
+        <TextView
+            android:id="@+id/carVIN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="@dimen/grid_item_horizontal_space"
+            android:layout_marginBottom="27dp"
+            android:alpha="0.75"
+            android:gravity="start|bottom"
+            android:text=""
+            android:textAppearance="@style/H3" />
+
+        <TextView
+            android:id="@+id/carSpecifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="@dimen/grid_item_horizontal_space"
+            android:layout_marginBottom="27dp"
+            android:alpha="0.75"
+            android:gravity="start|bottom"
+            android:text=""
+            android:textAppearance="@style/H3" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/card_back"
+        app:cardBackgroundColor="@color/backgroundColor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/card_back"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewCarMake"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.75"
+                    android:text="Make"
+                    android:textAppearance="@style/H3" />
+
+                <TextView
+                    android:id="@+id/textViewCarMakeData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:alpha="0.75"
+                    android:text=""
+                    android:textAppearance="@style/H3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewCarManufactureName"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.75"
+                    android:text="Manufacturer"
+                    android:textAppearance="@style/H3" />
+
+                <TextView
+                    android:id="@+id/textViewCarManufactureNameData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.75"
+                    android:text=""
+                    android:textAppearance="@style/H3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewCarModel"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.75"
+                    android:text="Model"
+                    android:textAppearance="@style/H3" />
+
+                <TextView
+                    android:id="@+id/textViewCarModelData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.75"
+                    android:text=""
+                    android:textAppearance="@style/H3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewCarModelYear"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.75"
+                    android:text="Year"
+                    android:textAppearance="@style/H3" />
+
+                <TextView
+                    android:id="@+id/textViewCarModelYearData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.75"
+                    android:text=""
+                    android:textAppearance="@style/H3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewCarBodyClass"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.75"
+                    android:text="Body Class"
+                    android:textAppearance="@style/H3" />
+
+                <TextView
+                    android:id="@+id/textViewCarBodyClassData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.75"
+                    android:text=""
+                    android:textAppearance="@style/H3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewDoors"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.75"
+                    android:text="No. Of Doors"
+                    android:textAppearance="@style/H3" />
+
+                <TextView
+                    android:id="@+id/textViewDoorsData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.75"
+                    android:text=""
+                    android:textAppearance="@style/H3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewPrice"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.75"
+                    android:text="Estimated Price"
+                    android:textAppearance="@style/H3" />
+
+                <TextView
+                    android:id="@+id/textViewPriceData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.75"
+                    android:text=""
+                    android:textAppearance="@style/H3" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
