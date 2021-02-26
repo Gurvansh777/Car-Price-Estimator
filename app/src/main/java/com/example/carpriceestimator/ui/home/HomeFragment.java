@@ -144,14 +144,7 @@ public class HomeFragment extends Fragment {
                     doors.setText(String.valueOf(decodedCar.getDoors()));
                     manufacturer.setText(decodedCar.getManufactureName());
                     price.setText("TO BE IMPLEMENTED");
-                    if(FLAG_TAKE_IMAGE == 0) {
-                        vinImage.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                        selectedImage = null;
-                    }
-                    if(FLAG_TAKE_IMAGE == 1){
-                        vinImage.setImageBitmap(selectedImage);
-                        FLAG_TAKE_IMAGE = 0;
-                    }
+                    vinImage.setImageResource(R.drawable.car);
                     carDetailsLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     Toast.makeText(getContext(), "Please try to scan again or enter the VIN in text.", Toast.LENGTH_SHORT).show();
