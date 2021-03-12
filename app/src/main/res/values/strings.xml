@@ -20,4 +20,5 @@
     <string name="vin">VIN</string>
     <string name="get_detail">GET DETAILS</string>
     <string name="logout">Logout</string>
+    <string name="mileage">Please enter mileage in KMS</string>
 </resources>
