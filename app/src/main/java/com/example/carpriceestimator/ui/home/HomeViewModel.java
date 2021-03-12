@@ -22,8 +22,16 @@ public class HomeViewModel extends AndroidViewModel {
         decodedCarsList = carsRepository.getAllDecodedCars();
     }
 
-    LiveData<List<DecodedCar>> getDecodedCarsList() { return this.decodedCarsList; }
+    LiveData<List<DecodedCar>> getDecodedCarsList() {
+        return this.decodedCarsList;
+    }
 
-    public void insert(DecodedCar decodedCar) { carsRepository.insert(decodedCar); }
+    public void insert(DecodedCar decodedCar) {
+        carsRepository.insert(decodedCar);
+    }
+
+    public void deleteNotRecentCars(int recentRecords) {
+        carsRepository.deleteNotRecentCars(recentRecords);
+    }
 
 }

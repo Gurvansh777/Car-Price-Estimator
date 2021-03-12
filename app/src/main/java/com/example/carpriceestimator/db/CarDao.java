@@ -17,4 +17,7 @@ public interface CarDao {
 
     @Query("SELECT * FROM car ORDER BY rowid DESC")
     LiveData<List<DecodedCar>> getAll();
+
+    @Query("DELETE FROM car WHERE rowid NOT IN (SELECT rowid FROM car ORDER BY rowid DESC LIMIT :recentRecords)")
+    void deleteNotRecentCars(int recentRecords);
 }

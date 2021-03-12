@@ -27,6 +27,10 @@ public class CarsRepository {
         new insertAsyncTask(carDao).execute(car);
     }
 
+    public void deleteNotRecentCars(int recentRecords) {
+        new deleteAsyncTask(carDao).execute(recentRecords);
+    }
+
     private class insertAsyncTask extends AsyncTask<DecodedCar, Void, Void> {
         private CarDao carDao;
 
@@ -40,4 +44,19 @@ public class CarsRepository {
             return null;
         }
     }
+
+    private class deleteAsyncTask extends AsyncTask<Integer, Void, Void> {
+        private CarDao carDao;
+
+        public deleteAsyncTask(CarDao carDao) {
+            this.carDao = carDao;
+        }
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            this.carDao.deleteNotRecentCars(integers[0]);
+            return null;
+        }
+    }
+
 }

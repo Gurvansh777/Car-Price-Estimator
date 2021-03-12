@@ -3,7 +3,6 @@ package com.example.carpriceestimator.ui.home;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -28,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -74,6 +74,7 @@ public class HomeFragment extends Fragment {
     TextView carName;
     TextView carVIN;
     TextView make, model, modelYear, bodyClass, doors, manufacturer, price;
+    CardView cardViewDetail;
 
     //VM
     private HomeViewModel homeViewModel;
@@ -106,6 +107,7 @@ public class HomeFragment extends Fragment {
         manufacturer = root.findViewById(R.id.textViewCarManufactureNameData);
         price = root.findViewById(R.id.textViewPriceData);
         progressBar = root.findViewById(R.id.progressBarHome);
+        cardViewDetail = root.findViewById(R.id.cardViewDetail);
 
         carDetailsLayout.setVisibility(View.INVISIBLE);
         cameraButton.setOnClickListener(v -> {
@@ -114,7 +116,24 @@ public class HomeFragment extends Fragment {
         });
 
         detailButton.setOnClickListener(v -> getCarDetails(etVIN.getText().toString().trim()));
+
+        cardViewDetail.setOnClickListener(view -> calculatePrice());
+
         return root;
+    }
+
+    private void calculatePrice() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Mileage");
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.mileage_edittext, (ViewGroup) getView(), false);
+        final EditText input = viewInflated.findViewById(R.id.et_mileage);
+        builder.setView(viewInflated);
+
+        builder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> Toast.makeText(getContext(), input.getText().toString(), Toast.LENGTH_LONG).show());
+
+        builder.setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
+
+        builder.show();
     }
 
     private void getCarDetails(String vin) {
@@ -132,6 +151,7 @@ public class HomeFragment extends Fragment {
                     DecodedCar decodedCar = CarDecoder.decode(car);
                     if (decodedCar != null) {
                         homeViewModel.insert(decodedCar);
+                        homeViewModel.deleteNotRecentCars(sharedPreferences.getInt(Constants.RECENT_RECORDS, 5));
                     }
                     //FINAL CAR DETAIL
                     Log.i("CAR", decodedCar.toString());
