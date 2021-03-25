@@ -35,10 +35,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.carpriceestimator.Constants;
 import com.example.carpriceestimator.R;
+import com.example.carpriceestimator.api.CarPriceInterface;
 import com.example.carpriceestimator.api.RetrofitBuilder;
 import com.example.carpriceestimator.api.VpicEndPointInterface;
 import com.example.carpriceestimator.entity.Car;
 import com.example.carpriceestimator.entity.DecodedCar;
+import com.example.carpriceestimator.entity.PriceResult;
 import com.example.carpriceestimator.utility.CarDecoder;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -126,14 +128,46 @@ public class HomeFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Mileage");
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.mileage_edittext, (ViewGroup) getView(), false);
-        final EditText input = viewInflated.findViewById(R.id.et_mileage);
+        final EditText odometer = viewInflated.findViewById(R.id.et_mileage);
         builder.setView(viewInflated);
 
-        builder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> Toast.makeText(getContext(), input.getText().toString(), Toast.LENGTH_LONG).show());
+        builder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> getPrice(Integer.parseInt(odometer.getText().toString().trim())));
 
         builder.setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
 
         builder.show();
+    }
+
+    private void getPrice(int odometer) {
+        progressBar.setVisibility(View.VISIBLE);
+        Retrofit retrofit = RetrofitBuilder.getPriceInstance();
+        CarPriceInterface apiService = retrofit.create(CarPriceInterface.class);
+
+        String make = this.make.getText().toString().toLowerCase().trim();
+        String name = model.getText().toString().toLowerCase().trim();
+        int year = Integer.parseInt(modelYear.getText().toString().trim());
+
+        Call<PriceResult> call = apiService.getPrice(make, name, year, odometer);
+
+        call.enqueue(new Callback<PriceResult>() {
+            @Override
+            public void onResponse(Call<PriceResult> call, Response<PriceResult> response) {
+                progressBar.setVisibility(View.INVISIBLE);
+                Log.i("PRICE", response.body().toString());
+                PriceResult priceResult = response.body();
+                if(priceResult.getResultValid() == 1){
+                    price.setText("$"+priceResult.getPrice());
+                }else{
+                    price.setText("CAR NOT FOUND !");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PriceResult> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
+                Log.i("PRICE-FAILED", t.toString());
+            }
+        });
     }
 
     private void getCarDetails(String vin) {
@@ -163,7 +197,7 @@ public class HomeFragment extends Fragment {
                     bodyClass.setText(decodedCar.getBodyClass());
                     doors.setText(String.valueOf(decodedCar.getDoors()));
                     manufacturer.setText(decodedCar.getManufactureName());
-                    price.setText("TO BE IMPLEMENTED");
+                    price.setText("TAP ON THE PICTURE!");
                     vinImage.setImageResource(R.drawable.car);
                     carDetailsLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
