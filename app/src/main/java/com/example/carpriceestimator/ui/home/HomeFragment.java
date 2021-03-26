@@ -82,6 +82,9 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     ProgressBar progressBar;
 
+    //Final result
+    DecodedCar decodedCar = null;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -156,7 +159,9 @@ public class HomeFragment extends Fragment {
                 Log.i("PRICE", response.body().toString());
                 PriceResult priceResult = response.body();
                 if(priceResult.getResultValid() == 1){
-                    price.setText("$"+priceResult.getPrice());
+                    decodedCar.setPrice(priceResult.getPrice());
+                    homeViewModel.insert(decodedCar);
+                    price.setText("$"+decodedCar.getPrice());
                 }else{
                     price.setText("CAR NOT FOUND !");
                 }
@@ -182,7 +187,8 @@ public class HomeFragment extends Fragment {
                 progressBar.setVisibility(View.INVISIBLE);
                 Car car = response.body();
                 try {
-                    DecodedCar decodedCar = CarDecoder.decode(car);
+                    //global
+                    decodedCar = CarDecoder.decode(car);
                     if (decodedCar != null) {
                         homeViewModel.insert(decodedCar);
                         homeViewModel.deleteNotRecentCars(sharedPreferences.getInt(Constants.RECENT_RECORDS, 5));

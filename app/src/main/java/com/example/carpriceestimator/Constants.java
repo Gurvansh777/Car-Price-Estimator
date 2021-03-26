@@ -7,5 +7,5 @@ public class Constants {
     public static final String BASE_URL = "https://vpic.nhtsa.dot.gov/";
     public static final String DATABASE_NAME = "CarsDB.db";
     public static final String RECENT_RECORDS  = "recentRecords";
-    public static final String BASE_URL_API = "http://3.239.40.12:5000/";
+    public static final String BASE_URL_API = "http://100.27.15.167:5000/";
 }

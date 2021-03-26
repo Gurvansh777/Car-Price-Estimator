@@ -16,10 +16,10 @@ public class DecodedCar {
     private String modelYear;
     private String bodyClass;
     private int doors;
-    private int price = 0;
+    private float price = 0.0F;
 
     @Ignore
-    public DecodedCar(String vin, String make, String manufactureName, String model, String modelYear, String bodyClass, int doors, int price) {
+    public DecodedCar(String vin, String make, String manufactureName, String model, String modelYear, String bodyClass, int doors, float price) {
         this.vin = vin;
         this.make = make;
         this.manufactureName = manufactureName;
@@ -33,9 +33,9 @@ public class DecodedCar {
     public DecodedCar() {
     }
 
-    public int getPrice() { return price; }
+    public float getPrice() { return price; }
 
-    public void setPrice(int price) {this.price = price; }
+    public void setPrice(float price) {this.price = price; }
 
     public String getVin() {
         return vin;

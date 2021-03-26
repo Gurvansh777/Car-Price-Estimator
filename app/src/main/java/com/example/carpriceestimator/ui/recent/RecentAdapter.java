@@ -48,7 +48,7 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.RecentRecy
         holder.vin.setText(carList.get(position).getVin());
         holder.model.setText(carList.get(position).getModel());
         holder.carMake.setText(carList.get(position).getMake()+" "+carList.get(position).getModel());
-        holder.price.setText("TO BE IMPLEMENTED");
+        holder.price.setText("$"+carList.get(position).getPrice());
     }
 
     @Override
