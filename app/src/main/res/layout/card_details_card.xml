@@ -228,19 +228,13 @@
 
                 <TextView
                     android:id="@+id/textViewPrice"
-                    android:layout_width="150dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:alpha="0.75"
-                    android:text="Estimated Price"
-                    android:textAppearance="@style/H3" />
-
-                <TextView
-                    android:id="@+id/textViewPriceData"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.75"
-                    android:text=""
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:text="Tap on the picture to get estimated price."
                     android:textAppearance="@style/H3" />
             </LinearLayout>
         </LinearLayout>

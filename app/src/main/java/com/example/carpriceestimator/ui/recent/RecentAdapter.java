@@ -34,7 +34,7 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.RecentRecy
         viewHolder.doors = itemView.findViewById(R.id.textViewDoorsData);
         viewHolder.carMake = itemView.findViewById(R.id.carName);
         viewHolder.manufacturer = itemView.findViewById(R.id.textViewCarManufactureNameData);
-        viewHolder.price = itemView.findViewById(R.id.textViewPriceData);
+        viewHolder.price = itemView.findViewById(R.id.textViewPrice);
         return viewHolder;
     }
 
@@ -48,7 +48,7 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.RecentRecy
         holder.vin.setText(carList.get(position).getVin());
         holder.model.setText(carList.get(position).getModel());
         holder.carMake.setText(carList.get(position).getMake()+" "+carList.get(position).getModel());
-        holder.price.setText("$"+carList.get(position).getPrice());
+        holder.price.setText("Estimated price: $"+carList.get(position).getPrice());
     }
 
     @Override

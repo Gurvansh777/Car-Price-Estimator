@@ -110,7 +110,7 @@ public class HomeFragment extends Fragment {
         modelYear = root.findViewById(R.id.textViewCarModelYearData);
         doors = root.findViewById(R.id.textViewDoorsData);
         manufacturer = root.findViewById(R.id.textViewCarManufactureNameData);
-        price = root.findViewById(R.id.textViewPriceData);
+        price = root.findViewById(R.id.textViewPrice);
         progressBar = root.findViewById(R.id.progressBarHome);
         cardViewDetail = root.findViewById(R.id.cardViewDetail);
 
@@ -149,7 +149,6 @@ public class HomeFragment extends Fragment {
         String make = this.make.getText().toString().toLowerCase().trim();
         String name = model.getText().toString().toLowerCase().trim();
         int year = Integer.parseInt(modelYear.getText().toString().trim());
-
         Call<PriceResult> call = apiService.getPrice(make, name, year, odometer);
 
         call.enqueue(new Callback<PriceResult>() {
@@ -161,7 +160,7 @@ public class HomeFragment extends Fragment {
                 if(priceResult.getResultValid() == 1){
                     decodedCar.setPrice(priceResult.getPrice());
                     homeViewModel.insert(decodedCar);
-                    price.setText("$"+decodedCar.getPrice());
+                    price.setText("Estimated price: $"+decodedCar.getPrice());
                 }else{
                     price.setText("CAR NOT FOUND !");
                 }
@@ -224,7 +223,7 @@ public class HomeFragment extends Fragment {
         final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Choose your profile picture");
+        builder.setTitle("Capture or Choose a picture of VIN");
         builder.setItems(options, (dialog, item) -> {
 
             if (options[item].equals("Take Photo")) {

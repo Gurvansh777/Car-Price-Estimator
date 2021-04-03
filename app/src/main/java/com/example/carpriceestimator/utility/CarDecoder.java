@@ -43,8 +43,6 @@ public class CarDecoder {
                     break;
             }
         }
-
-
         return decodedCar;
     }
 }
