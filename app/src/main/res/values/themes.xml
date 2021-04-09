@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.CarPriceEstimator" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/yellow_500</item>
+        <item name="colorPrimaryVariant">@color/blue_200</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -15,7 +15,7 @@
     </style>
 
     <style name="ThemeOverlay.App.TextInputLayout" parent="">
-        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimary">@color/yellow_500</item>
         <item name="colorOnSurface">@color/black</item>
         <item name="colorError">@color/teal_200</item>
     </style>

@@ -42,6 +42,7 @@ import com.example.carpriceestimator.entity.Car;
 import com.example.carpriceestimator.entity.DecodedCar;
 import com.example.carpriceestimator.entity.PriceResult;
 import com.example.carpriceestimator.utility.CarDecoder;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
@@ -77,10 +78,9 @@ public class HomeFragment extends Fragment {
     TextView carVIN;
     TextView make, model, modelYear, bodyClass, doors, manufacturer, price;
     CardView cardViewDetail;
-
+    ShimmerFrameLayout shimmerFrameLayout, shimmerFrameLayoutPrice;
     //VM
     private HomeViewModel homeViewModel;
-    ProgressBar progressBar;
 
     //Final result
     DecodedCar decodedCar = null;
@@ -98,7 +98,8 @@ public class HomeFragment extends Fragment {
 
         Button cameraButton = root.findViewById(R.id.btnCamera);
         Button detailButton = root.findViewById(R.id.btnCarDetail);
-
+        shimmerFrameLayout = root.findViewById(R.id.facebookShimmerLayout);
+        shimmerFrameLayoutPrice = root.findViewById(R.id.facebookShimmerLayoutPrice);
         carDetailsLayout = root.findViewById(R.id.carDetailsLayout);
         carName = root.findViewById(R.id.carName);
         carVIN = root.findViewById(R.id.carVIN);
@@ -111,17 +112,18 @@ public class HomeFragment extends Fragment {
         doors = root.findViewById(R.id.textViewDoorsData);
         manufacturer = root.findViewById(R.id.textViewCarManufactureNameData);
         price = root.findViewById(R.id.textViewPrice);
-        progressBar = root.findViewById(R.id.progressBarHome);
+        //progressBar = root.findViewById(R.id.progressBarHome);
         cardViewDetail = root.findViewById(R.id.cardViewDetail);
 
         carDetailsLayout.setVisibility(View.INVISIBLE);
+        shimmerFrameLayout.setVisibility(View.INVISIBLE);
+        shimmerFrameLayoutPrice.setVisibility(View.INVISIBLE);
         cameraButton.setOnClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             selectImage(getContext());
         });
 
         detailButton.setOnClickListener(v -> getCarDetails(etVIN.getText().toString().trim()));
-
         cardViewDetail.setOnClickListener(view -> calculatePrice());
 
         return root;
@@ -135,14 +137,12 @@ public class HomeFragment extends Fragment {
         builder.setView(viewInflated);
 
         builder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> getPrice(Integer.parseInt(odometer.getText().toString().trim())));
-
         builder.setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
-
         builder.show();
     }
 
     private void getPrice(int odometer) {
-        progressBar.setVisibility(View.VISIBLE);
+        shimmerFrameLayoutPrice.setVisibility(View.VISIBLE);
         Retrofit retrofit = RetrofitBuilder.getPriceInstance();
         CarPriceInterface apiService = retrofit.create(CarPriceInterface.class);
 
@@ -154,7 +154,7 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<PriceResult>() {
             @Override
             public void onResponse(Call<PriceResult> call, Response<PriceResult> response) {
-                progressBar.setVisibility(View.INVISIBLE);
+                shimmerFrameLayoutPrice.setVisibility(View.INVISIBLE);
                 Log.i("PRICE", response.body().toString());
                 PriceResult priceResult = response.body();
                 if(priceResult.getResultValid() == 1){
@@ -168,14 +168,14 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<PriceResult> call, Throwable t) {
-                progressBar.setVisibility(View.INVISIBLE);
+                shimmerFrameLayoutPrice.setVisibility(View.INVISIBLE);
                 Log.i("PRICE-FAILED", t.toString());
             }
         });
     }
 
     private void getCarDetails(String vin) {
-        progressBar.setVisibility(View.VISIBLE);
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
         Retrofit retrofit = RetrofitBuilder.getInstance();
         VpicEndPointInterface apiService = retrofit.create(VpicEndPointInterface.class);
 
@@ -183,7 +183,7 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<Car>() {
             @Override
             public void onResponse(Call<Car> call, Response<Car> response) {
-                progressBar.setVisibility(View.INVISIBLE);
+                shimmerFrameLayout.setVisibility(View.INVISIBLE);
                 Car car = response.body();
                 try {
                     //global
@@ -202,18 +202,18 @@ public class HomeFragment extends Fragment {
                     bodyClass.setText(decodedCar.getBodyClass());
                     doors.setText(String.valueOf(decodedCar.getDoors()));
                     manufacturer.setText(decodedCar.getManufactureName());
-                    price.setText("TAP ON THE PICTURE!");
+                    price.setText("Tap on the picture to get estimated price.");
                     vinImage.setImageResource(R.drawable.car);
                     carDetailsLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     Toast.makeText(getContext(), "Please try to scan again or enter the VIN in text.", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.INVISIBLE);
+                    shimmerFrameLayout.setVisibility(View.INVISIBLE);
                 }
             }
 
             @Override
             public void onFailure(Call<Car> call, Throwable t) {
-                progressBar.setVisibility(View.INVISIBLE);
+                shimmerFrameLayout.setVisibility(View.INVISIBLE);
                 // Log error here since request failed
             }
         });
@@ -276,6 +276,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_CANCELED) {
+            shimmerFrameLayout.setVisibility(View.VISIBLE);
             switch (requestCode) {
                 case 0:
                     if (resultCode == RESULT_OK && data != null) {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:backgroundTint="#65000000"
     android:backgroundTintMode="src_over"
-    android:background="@drawable/background"
+    android:background="@drawable/image"
     tools:context=".authentication.LoginActivity">
 
 
@@ -15,18 +15,18 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        android:shadowColor="@color/purple_500"
+        android:layout_marginTop="32dp"
+        android:shadowColor="@color/blue_200"
         android:shadowDx=".5"
         android:shadowDy=".5"
         android:shadowRadius=".5"
         android:text="@string/signup"
         android:textAlignment="center"
-        android:textColor="@color/purple_500"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/yellow_500"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.917"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -36,10 +36,9 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.359">
+        app:layout_constraintVertical_bias="0.7">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/username"
@@ -70,7 +69,8 @@
                 android:layout_width="285dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -87,6 +87,25 @@
             android:text="@string/login"
             app:icon="@drawable/ic_baseline_login_24"
             app:iconGravity="textStart" />
+
+        <TextView
+            android:id="@+id/textViewConnectWith"
+            android:layout_width="250dp"
+            android:layout_height="16dp"
+            android:text="@string/or_connect_with"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
+
+        <com.shobhitpuri.custombuttons.GoogleSignInButton
+            android:id="@+id/buttonGoogleLogin"
+            android:layout_width="285dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="63dp"
+            android:layout_marginEnd="63dp"
+            android:layout_weight="1"
+            android:text="@string/google"
+            android:textAlignment="gravity"
+            app:isDarkTheme="true" />
     </LinearLayout>
 
     <Button
@@ -106,40 +125,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/textViewConnectWith"
-        android:layout_width="275dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/or_connect_with"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
-
-    <LinearLayout
-        android:layout_width="285dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewConnectWith"
-        tools:ignore="MissingClass">
-
-        <com.shobhitpuri.custombuttons.GoogleSignInButton
-            android:id="@+id/buttonGoogleLogin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/google"
-            android:textAlignment="gravity"
-            app:isDarkTheme="true" />
-
-
-    </LinearLayout>
-
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
@@ -148,9 +133,9 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.055"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.748" />
+        app:layout_constraintVertical_bias="0.142" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
