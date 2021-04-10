@@ -21,8 +21,8 @@ public class RecentFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.recent_fragment, container, false);
-            recentViewModel = new ViewModelProvider(this).get(RecentViewModel.class);
-            recentViewModel.getDecodedCarsList().observe(getViewLifecycleOwner(), decodedCars -> {
+        recentViewModel = new ViewModelProvider(this).get(RecentViewModel.class);
+        recentViewModel.getDecodedCarsList().observe(getViewLifecycleOwner(), decodedCars -> {
             RecentAdapter recentAdapter = new RecentAdapter(decodedCars);
             RecyclerView recent_recycler_view = root.findViewById(R.id.recyclerViewRecentScans);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());

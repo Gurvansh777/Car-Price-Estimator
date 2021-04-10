@@ -17,9 +17,12 @@ public class DecodedCar {
     private String bodyClass;
     private int doors;
     private float price = 0.0F;
+    private String userEmailAddress = "";
+
 
     @Ignore
-    public DecodedCar(String vin, String make, String manufactureName, String model, String modelYear, String bodyClass, int doors, float price) {
+    public DecodedCar(String vin, String make, String manufactureName, String model, String modelYear, String bodyClass, int doors, float price, String userEmailAddress) {
+        this.userEmailAddress = userEmailAddress;
         this.vin = vin;
         this.make = make;
         this.manufactureName = manufactureName;
@@ -33,9 +36,13 @@ public class DecodedCar {
     public DecodedCar() {
     }
 
-    public float getPrice() { return price; }
+    public float getPrice() {
+        return price;
+    }
 
-    public void setPrice(float price) {this.price = price; }
+    public void setPrice(float price) {
+        this.price = price;
+    }
 
     public String getVin() {
         return vin;
@@ -93,6 +100,14 @@ public class DecodedCar {
         this.doors = doors;
     }
 
+    public String getUserEmailAddress() {
+        return userEmailAddress;
+    }
+
+    public void setUserEmailAddress(String userEmailAddress) {
+        this.userEmailAddress = userEmailAddress;
+    }
+
     @Override
     public String toString() {
         return "DecodedCar{" +
@@ -103,6 +118,7 @@ public class DecodedCar {
                 ", modelYear='" + modelYear + '\'' +
                 ", bodyClass='" + bodyClass + '\'' +
                 ", doors=" + doors +
+                ", userEmailAddress=" + userEmailAddress +
                 '}';
     }
 }

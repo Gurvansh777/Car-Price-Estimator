@@ -13,17 +13,17 @@ public class CarsRepository {
     private CarDao carDao;
     private LiveData<List<DecodedCar>> allDecodedCars;
 
-    public CarsRepository(Application application){
+    public CarsRepository(Application application, String userEmailAddress) {
         AppDatabase appDatabase = AppDatabase.getInstance(application);
         carDao = appDatabase.carDao();
-        allDecodedCars = carDao.getAll();
+        allDecodedCars = carDao.getAll(userEmailAddress);
     }
 
     public LiveData<List<DecodedCar>> getAllDecodedCars() {
         return allDecodedCars;
     }
 
-    public void insert (DecodedCar car) {
+    public void insert(DecodedCar car) {
         new insertAsyncTask(carDao).execute(car);
     }
 

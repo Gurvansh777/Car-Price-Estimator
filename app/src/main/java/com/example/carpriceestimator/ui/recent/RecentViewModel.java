@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.carpriceestimator.db.CarsRepository;
 import com.example.carpriceestimator.entity.DecodedCar;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -17,9 +18,11 @@ public class RecentViewModel extends AndroidViewModel {
 
     public RecentViewModel(@NonNull Application application) {
         super(application);
-        carsRepository = new CarsRepository(application);
+        carsRepository = new CarsRepository(application, FirebaseAuth.getInstance().getCurrentUser().getEmail());
         decodedCarsList = carsRepository.getAllDecodedCars();
     }
 
-    LiveData<List<DecodedCar>> getDecodedCarsList() { return this.decodedCarsList; }
+    LiveData<List<DecodedCar>> getDecodedCarsList() {
+        return this.decodedCarsList;
+    }
 }

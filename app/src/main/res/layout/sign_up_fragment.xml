@@ -15,8 +15,8 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="@font/dancing_script"
+        android:layout_marginBottom="96dp"
+        android:fontFamily="@font/contrail_one"
         android:text="@string/login_start"
         android:textColor="@color/yellow_500"
         android:textSize="30sp"
@@ -82,7 +82,7 @@
                 android:id="@+id/edittextSignUpUsername"
                 android:layout_width="275dp"
                 android:layout_height="wrap_content"
-                android:hint="Username" />
+                android:hint="Email" />
         </com.google.android.material.textfield.TextInputLayout>
 
 

@@ -1,11 +1,8 @@
 package com.example.carpriceestimator.utility;
 
-import android.widget.Toast;
-
 import com.example.carpriceestimator.entity.Car;
 import com.example.carpriceestimator.entity.CarResult;
 import com.example.carpriceestimator.entity.DecodedCar;
-import com.example.carpriceestimator.ui.home.HomeFragment;
 
 import java.util.List;
 

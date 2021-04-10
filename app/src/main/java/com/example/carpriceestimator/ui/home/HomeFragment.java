@@ -9,8 +9,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +42,7 @@ import com.example.carpriceestimator.utility.CarDecoder;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions;
@@ -94,7 +92,7 @@ public class HomeFragment extends Fragment {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         final TextView textView = root.findViewById(R.id.tvHome);
-        textView.setText(String.format("User: %s", sharedPreferences.getString(Constants.USER_EMAIL, "")));
+        textView.setText(String.format("User: %s", sharedPreferences.getString(Constants.USER_EMAIL, FirebaseAuth.getInstance().getCurrentUser().getEmail())));
 
         Button cameraButton = root.findViewById(R.id.btnCamera);
         Button detailButton = root.findViewById(R.id.btnCarDetail);
@@ -143,6 +141,7 @@ public class HomeFragment extends Fragment {
 
     private void getPrice(int odometer) {
         shimmerFrameLayoutPrice.setVisibility(View.VISIBLE);
+        price.setVisibility(View.INVISIBLE);
         Retrofit retrofit = RetrofitBuilder.getPriceInstance();
         CarPriceInterface apiService = retrofit.create(CarPriceInterface.class);
 
@@ -155,13 +154,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<PriceResult> call, Response<PriceResult> response) {
                 shimmerFrameLayoutPrice.setVisibility(View.INVISIBLE);
+                price.setVisibility(View.VISIBLE);
                 Log.i("PRICE", response.body().toString());
                 PriceResult priceResult = response.body();
-                if(priceResult.getResultValid() == 1){
+                if (priceResult.getResultValid() == 1) {
                     decodedCar.setPrice(priceResult.getPrice());
                     homeViewModel.insert(decodedCar);
-                    price.setText("Estimated price: $"+decodedCar.getPrice());
-                }else{
+                    price.setText("Estimated price: $" + decodedCar.getPrice());
+                } else {
                     price.setText("CAR NOT FOUND !");
                 }
             }
@@ -169,6 +169,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<PriceResult> call, Throwable t) {
                 shimmerFrameLayoutPrice.setVisibility(View.INVISIBLE);
+                price.setVisibility(View.VISIBLE);
                 Log.i("PRICE-FAILED", t.toString());
             }
         });
@@ -189,6 +190,7 @@ public class HomeFragment extends Fragment {
                     //global
                     decodedCar = CarDecoder.decode(car);
                     if (decodedCar != null) {
+                        decodedCar.setUserEmailAddress(FirebaseAuth.getInstance().getCurrentUser().getEmail());
                         homeViewModel.insert(decodedCar);
                         homeViewModel.deleteNotRecentCars(sharedPreferences.getInt(Constants.RECENT_RECORDS, 5));
                     }
@@ -243,8 +245,7 @@ public class HomeFragment extends Fragment {
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 20);
-                }
-                else {
+                } else {
                     FLAG_TAKE_IMAGE = 0;
                     Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     pickPhoto.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -261,21 +262,22 @@ public class HomeFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == 0) {
+        if (requestCode == 10) {
             Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(takePicture, 10);
+            startActivityForResult(takePicture, 0);
         }
 
-        if(requestCode == 1){
+        if (requestCode == 20) {
             Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             pickPhoto.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-            startActivityForResult(pickPhoto, 20);
+            startActivityForResult(pickPhoto, 1);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_CANCELED) {
+            carDetailsLayout.setVisibility(View.INVISIBLE);
             shimmerFrameLayout.setVisibility(View.VISIBLE);
             switch (requestCode) {
                 case 0:
@@ -322,8 +324,6 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onSuccess(FirebaseVisionText result) {
                         for (FirebaseVisionText.TextBlock block : result.getTextBlocks()) {
-                            Rect boundingBox = block.getBoundingBox();
-                            Point[] cornerPoints = block.getCornerPoints();
 
                             for (FirebaseVisionText.Line line : block.getLines()) {
                                 String text = block.getText();
@@ -344,6 +344,7 @@ public class HomeFragment extends Fragment {
                             }
                         }
                         if (!vinScanned) {
+                            shimmerFrameLayout.setVisibility(View.INVISIBLE);
                             Toast.makeText(getContext(), "Please try to scan again or enter the VIN in text.", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -351,4 +352,6 @@ public class HomeFragment extends Fragment {
                 .addOnFailureListener(e -> {
                 });
     }
+
+
 }

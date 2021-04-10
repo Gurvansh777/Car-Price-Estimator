@@ -15,8 +15,8 @@ public interface CarDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertCar(DecodedCar decodedCar);
 
-    @Query("SELECT * FROM car ORDER BY rowid DESC")
-    LiveData<List<DecodedCar>> getAll();
+    @Query("SELECT * FROM car WHERE userEmailAddress = :emailAddress ORDER BY rowid DESC")
+    LiveData<List<DecodedCar>> getAll(String emailAddress);
 
     @Query("DELETE FROM car WHERE rowid NOT IN (SELECT rowid FROM car ORDER BY rowid DESC LIMIT :recentRecords)")
     void deleteNotRecentCars(int recentRecords);

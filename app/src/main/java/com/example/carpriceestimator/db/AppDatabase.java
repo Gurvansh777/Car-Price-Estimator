@@ -12,16 +12,17 @@ import com.example.carpriceestimator.entity.DecodedCar;
 @Database(entities = {DecodedCar.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract CarDao carDao();
+
     public static AppDatabase INSTANCE = null;
 
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
-            synchronized(AppDatabase.class) {
+            synchronized (AppDatabase.class) {
                 INSTANCE = Room.databaseBuilder(
                         context.getApplicationContext(),
                         AppDatabase.class,
                         Constants.DATABASE_NAME
-                    ).build();
+                ).build();
             }
         }
         return INSTANCE;

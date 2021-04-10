@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.carpriceestimator.R;
 import com.example.carpriceestimator.entity.DecodedCar;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.RecentRecy
     @NonNull
     @Override
     public RecentRecycler onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recent_list_layout,parent,false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recent_list_layout, parent, false);
         RecentRecycler viewHolder = new RecentRecycler(itemView);
         viewHolder.vin = itemView.findViewById(R.id.carVIN);
         viewHolder.bodyClass = itemView.findViewById(R.id.textViewCarBodyClassData);
@@ -35,6 +36,7 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.RecentRecy
         viewHolder.carMake = itemView.findViewById(R.id.carName);
         viewHolder.manufacturer = itemView.findViewById(R.id.textViewCarManufactureNameData);
         viewHolder.price = itemView.findViewById(R.id.textViewPrice);
+        viewHolder.shimmerLayout = itemView.findViewById(R.id.facebookShimmerLayoutPrice);
         return viewHolder;
     }
 
@@ -47,8 +49,9 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.RecentRecy
         holder.make.setText(carList.get(position).getMake());
         holder.vin.setText(carList.get(position).getVin());
         holder.model.setText(carList.get(position).getModel());
-        holder.carMake.setText(carList.get(position).getMake()+" "+carList.get(position).getModel());
-        holder.price.setText("Estimated price: $"+carList.get(position).getPrice());
+        holder.carMake.setText(carList.get(position).getMake() + " " + carList.get(position).getModel());
+        holder.price.setText("Estimated price: $" + carList.get(position).getPrice());
+        holder.shimmerLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -58,6 +61,8 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.RecentRecy
 
     public static class RecentRecycler extends RecyclerView.ViewHolder {
         TextView make, model, modelYear, bodyClass, vin, doors, manufacturer, price, carMake;
+        ShimmerFrameLayout shimmerLayout;
+
         public RecentRecycler(@NonNull View itemView) {
             super(itemView);
         }

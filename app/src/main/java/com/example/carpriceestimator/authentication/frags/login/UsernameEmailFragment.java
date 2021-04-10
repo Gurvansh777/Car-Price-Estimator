@@ -102,7 +102,7 @@ public class UsernameEmailFragment extends Fragment {
                     Intent mainActivity = new Intent(getContext(), MainActivity.class);
                     startActivity(mainActivity);
                 } else {
-                    Toast.makeText(getContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Authentication failed, please enter valid email and password.", Toast.LENGTH_SHORT).show();
                 }
                 progressBar.setVisibility(View.INVISIBLE);
             });
