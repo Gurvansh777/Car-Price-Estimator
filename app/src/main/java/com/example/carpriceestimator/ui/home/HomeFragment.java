@@ -110,7 +110,6 @@ public class HomeFragment extends Fragment {
         doors = root.findViewById(R.id.textViewDoorsData);
         manufacturer = root.findViewById(R.id.textViewCarManufactureNameData);
         price = root.findViewById(R.id.textViewPrice);
-        //progressBar = root.findViewById(R.id.progressBarHome);
         cardViewDetail = root.findViewById(R.id.cardViewDetail);
 
         carDetailsLayout.setVisibility(View.INVISIBLE);
