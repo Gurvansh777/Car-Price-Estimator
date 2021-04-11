@@ -59,6 +59,9 @@ import retrofit2.Retrofit;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * This fragment set up the home tab
+ */
 public class HomeFragment extends Fragment {
 
     SharedPreferences sharedPreferences;
@@ -126,6 +129,9 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Get user mileage through dialog
+     */
     private void calculatePrice() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Mileage");
@@ -138,6 +144,10 @@ public class HomeFragment extends Fragment {
         builder.show();
     }
 
+    /**
+     * Call car price estimator api to get the best price
+     * @param odometer
+     */
     private void getPrice(int odometer) {
         shimmerFrameLayoutPrice.setVisibility(View.VISIBLE);
         price.setVisibility(View.INVISIBLE);
@@ -174,6 +184,10 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    /**
+     * Method to call vpic api to get the car details
+     * @param vin
+     */
     private void getCarDetails(String vin) {
         shimmerFrameLayout.setVisibility(View.VISIBLE);
         Retrofit retrofit = RetrofitBuilder.getInstance();
@@ -220,6 +234,10 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    /**
+     * Select image from storage
+     * @param context
+     */
     private void selectImage(Context context) {
         final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
 
@@ -309,7 +327,10 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Firebase vision api helper to get text from image based on regex
+     * @param image
+     */
     private void recognizeTextCloud(FirebaseVisionImage image) {
         FirebaseVisionCloudTextRecognizerOptions options = new FirebaseVisionCloudTextRecognizerOptions.Builder()
                 .setLanguageHints(Arrays.asList("en", "hi"))

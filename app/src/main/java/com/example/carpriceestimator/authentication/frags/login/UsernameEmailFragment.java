@@ -32,19 +32,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+/**
+ * This fragment is used for email password login page
+ */
 public class UsernameEmailFragment extends Fragment {
-    //Firebase
-    private FirebaseAuth auth;
-    private GoogleSignInClient mGoogleSignInClient;
-
     //Views
     EditText email, password;
     ProgressBar progressBar;
     Button loginButton, backtoLogin, googleLogin;
     TextView signUpText, forgetPassword;
-
     //Sp
     SharedPreferences sharedpreferences;
+    //Firebase
+    private FirebaseAuth auth;
+    private GoogleSignInClient mGoogleSignInClient;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -89,12 +91,15 @@ public class UsernameEmailFragment extends Fragment {
                 .navigate(R.id.action_usernameEmailFragment_to_forgetPasswordFragment));
     }
 
+    /**
+     * Validate user based on inputs with firebase authentication
+     */
     public void Login() {
         if (email.getText().length() > 0 && password.getText().length() > 0) {
             progressBar.setVisibility(View.VISIBLE);
             auth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(getActivity(), task -> {
                 if (task.isSuccessful()) {
-                   // Toast.makeText(getContext(), "Successfully Logged In", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getContext(), "Successfully Logged In", Toast.LENGTH_SHORT).show();
                     SharedPreferences.Editor spEditor = sharedpreferences.edit();
                     spEditor.putString(Constants.USER_EMAIL, auth.getCurrentUser().getEmail());
                     spEditor.apply();
@@ -111,6 +116,9 @@ public class UsernameEmailFragment extends Fragment {
         }
     }
 
+    /**
+     * Method to login using google email
+     */
     public void LoginWithGoogle() {
         progressBar.setVisibility(View.VISIBLE);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -132,6 +140,11 @@ public class UsernameEmailFragment extends Fragment {
         }
     }
 
+    /**
+     * Helper method to authenticate user
+     *
+     * @param idToken
+     */
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         auth.signInWithCredential(credential)

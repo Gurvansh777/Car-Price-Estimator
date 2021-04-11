@@ -24,6 +24,9 @@ import com.example.carpriceestimator.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * This fragment is used for sign up new user
+ */
 public class SignUpFragment extends Fragment {
     FirebaseAuth auth;
     EditText signUpEmail, signUpPassword;
@@ -63,6 +66,10 @@ public class SignUpFragment extends Fragment {
                 .navigate(R.id.action_signUpFragment_to_usernameEmailFragment));
     }
 
+    /**
+     * Utility method to check network connection
+     * @return - isConnected
+     */
     public boolean checkConnection() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         connected = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
@@ -70,6 +77,9 @@ public class SignUpFragment extends Fragment {
         return connected;
     }
 
+    /**
+     * Get user details, validate and sign up the user
+     */
     public void SignUp() {
         String email, password;
         email = signUpEmail.getText().toString();

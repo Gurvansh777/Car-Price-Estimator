@@ -5,11 +5,18 @@ import com.example.carpriceestimator.Constants;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Helper class to provide singleton retrofit objects
+ */
 public class RetrofitBuilder {
     public static Retrofit INSTANCE = null;
     public static Retrofit INSTANCE_PRICE = null;
     private RetrofitBuilder(){}
 
+    /***
+     * Method to get retrofit instance for vpic api
+     * @return - Retrofit instance
+     */
     public static Retrofit getInstance(){
         if (INSTANCE == null) {
             INSTANCE = new Retrofit.Builder()
@@ -20,6 +27,10 @@ public class RetrofitBuilder {
         return INSTANCE;
     }
 
+    /***
+     * Method to get retrofit instance for car price estimator api
+     * @return - Retrofit instance
+     */
     public static Retrofit getPriceInstance(){
         if (INSTANCE_PRICE == null) {
             INSTANCE_PRICE = new Retrofit.Builder()

@@ -6,9 +6,17 @@ import com.example.carpriceestimator.entity.DecodedCar;
 
 import java.util.List;
 
+/**
+ * Utility class to parse vpic api result into required information
+ */
 public class CarDecoder {
     private static DecodedCar decodedCar;
 
+    /**
+     * Utility method to parse car into required info
+     * @param car
+     * @return - Decoded car
+     */
     public static DecodedCar decode(Car car) {
         decodedCar = new DecodedCar();
         List<CarResult> carResults = car.getResults();

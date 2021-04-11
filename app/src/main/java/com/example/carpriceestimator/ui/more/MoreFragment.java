@@ -20,7 +20,9 @@ import com.example.carpriceestimator.Constants;
 import com.example.carpriceestimator.FlashScreenActivity;
 import com.example.carpriceestimator.R;
 import com.example.carpriceestimator.ui.home.HomeViewModel;
-
+/**
+ * This fragment set up the more tab
+ */
 public class MoreFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
@@ -69,6 +71,9 @@ public class MoreFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Method to process logout of user
+     */
     private void logout() {
         sharedPreferences.edit().clear().apply();
         startActivity(new Intent(getActivity(), FlashScreenActivity.class));

@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.carpriceestimator.authentication.LoginActivity;
 
+/**
+ * Flash screen activity that appears for 3 seconds to check if there is any logged in user
+ */
 public class FlashScreenActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;

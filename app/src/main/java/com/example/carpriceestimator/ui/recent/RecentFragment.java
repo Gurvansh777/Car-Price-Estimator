@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.carpriceestimator.R;
 
+/**
+ * This fragment sets the list of recent cars
+ */
 public class RecentFragment extends Fragment {
     private RecentViewModel recentViewModel;
 
