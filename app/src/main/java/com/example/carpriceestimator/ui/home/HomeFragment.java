@@ -3,15 +3,12 @@ package com.example.carpriceestimator.ui.home;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,11 +20,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -35,13 +32,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.carpriceestimator.Constants;
 import com.example.carpriceestimator.R;
+import com.example.carpriceestimator.api.CarPriceInterface;
 import com.example.carpriceestimator.api.RetrofitBuilder;
 import com.example.carpriceestimator.api.VpicEndPointInterface;
 import com.example.carpriceestimator.entity.Car;
 import com.example.carpriceestimator.entity.DecodedCar;
+import com.example.carpriceestimator.entity.PriceResult;
 import com.example.carpriceestimator.utility.CarDecoder;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions;
@@ -58,6 +59,9 @@ import retrofit2.Retrofit;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * This fragment set up the home tab
+ */
 public class HomeFragment extends Fragment {
 
     SharedPreferences sharedPreferences;
@@ -74,10 +78,13 @@ public class HomeFragment extends Fragment {
     TextView carName;
     TextView carVIN;
     TextView make, model, modelYear, bodyClass, doors, manufacturer, price;
-
+    CardView cardViewDetail;
+    ShimmerFrameLayout shimmerFrameLayout, shimmerFrameLayoutPrice;
     //VM
     private HomeViewModel homeViewModel;
-    ProgressBar progressBar;
+
+    //Final result
+    DecodedCar decodedCar = null;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -88,11 +95,12 @@ public class HomeFragment extends Fragment {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         final TextView textView = root.findViewById(R.id.tvHome);
-        textView.setText(String.format("User: %s", sharedPreferences.getString(Constants.USER_EMAIL, "")));
+        textView.setText(String.format("User: %s", sharedPreferences.getString(Constants.USER_EMAIL, FirebaseAuth.getInstance().getCurrentUser().getEmail())));
 
         Button cameraButton = root.findViewById(R.id.btnCamera);
         Button detailButton = root.findViewById(R.id.btnCarDetail);
-
+        shimmerFrameLayout = root.findViewById(R.id.facebookShimmerLayout);
+        shimmerFrameLayoutPrice = root.findViewById(R.id.facebookShimmerLayoutPrice);
         carDetailsLayout = root.findViewById(R.id.carDetailsLayout);
         carName = root.findViewById(R.id.carName);
         carVIN = root.findViewById(R.id.carVIN);
@@ -104,21 +112,84 @@ public class HomeFragment extends Fragment {
         modelYear = root.findViewById(R.id.textViewCarModelYearData);
         doors = root.findViewById(R.id.textViewDoorsData);
         manufacturer = root.findViewById(R.id.textViewCarManufactureNameData);
-        price = root.findViewById(R.id.textViewPriceData);
-        progressBar = root.findViewById(R.id.progressBarHome);
+        price = root.findViewById(R.id.textViewPrice);
+        cardViewDetail = root.findViewById(R.id.cardViewDetail);
 
         carDetailsLayout.setVisibility(View.INVISIBLE);
+        shimmerFrameLayout.setVisibility(View.INVISIBLE);
+        shimmerFrameLayoutPrice.setVisibility(View.INVISIBLE);
         cameraButton.setOnClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             selectImage(getContext());
         });
 
         detailButton.setOnClickListener(v -> getCarDetails(etVIN.getText().toString().trim()));
+        cardViewDetail.setOnClickListener(view -> calculatePrice());
+
         return root;
     }
 
+    /**
+     * Get user mileage through dialog
+     */
+    private void calculatePrice() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Mileage");
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.mileage_edittext, (ViewGroup) getView(), false);
+        final EditText odometer = viewInflated.findViewById(R.id.et_mileage);
+        builder.setView(viewInflated);
+
+        builder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> getPrice(Integer.parseInt(odometer.getText().toString().trim())));
+        builder.setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
+        builder.show();
+    }
+
+    /**
+     * Call car price estimator api to get the best price
+     * @param odometer
+     */
+    private void getPrice(int odometer) {
+        shimmerFrameLayoutPrice.setVisibility(View.VISIBLE);
+        price.setVisibility(View.INVISIBLE);
+        Retrofit retrofit = RetrofitBuilder.getPriceInstance();
+        CarPriceInterface apiService = retrofit.create(CarPriceInterface.class);
+
+        String make = this.make.getText().toString().toLowerCase().trim();
+        String name = model.getText().toString().toLowerCase().trim();
+        int year = Integer.parseInt(modelYear.getText().toString().trim());
+        Call<PriceResult> call = apiService.getPrice(make, name, year, odometer);
+
+        call.enqueue(new Callback<PriceResult>() {
+            @Override
+            public void onResponse(Call<PriceResult> call, Response<PriceResult> response) {
+                shimmerFrameLayoutPrice.setVisibility(View.INVISIBLE);
+                price.setVisibility(View.VISIBLE);
+                Log.i("PRICE", response.body().toString());
+                PriceResult priceResult = response.body();
+                if (priceResult.getResultValid() == 1) {
+                    decodedCar.setPrice(priceResult.getPrice());
+                    homeViewModel.insert(decodedCar);
+                    price.setText("Estimated price: $" + decodedCar.getPrice());
+                } else {
+                    price.setText("CAR NOT FOUND !");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PriceResult> call, Throwable t) {
+                shimmerFrameLayoutPrice.setVisibility(View.INVISIBLE);
+                price.setVisibility(View.VISIBLE);
+                Log.i("PRICE-FAILED", t.toString());
+            }
+        });
+    }
+
+    /**
+     * Method to call vpic api to get the car details
+     * @param vin
+     */
     private void getCarDetails(String vin) {
-        progressBar.setVisibility(View.VISIBLE);
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
         Retrofit retrofit = RetrofitBuilder.getInstance();
         VpicEndPointInterface apiService = retrofit.create(VpicEndPointInterface.class);
 
@@ -126,12 +197,15 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<Car>() {
             @Override
             public void onResponse(Call<Car> call, Response<Car> response) {
-                progressBar.setVisibility(View.INVISIBLE);
+                shimmerFrameLayout.setVisibility(View.INVISIBLE);
                 Car car = response.body();
                 try {
-                    DecodedCar decodedCar = CarDecoder.decode(car);
+                    //global
+                    decodedCar = CarDecoder.decode(car);
                     if (decodedCar != null) {
+                        decodedCar.setUserEmailAddress(FirebaseAuth.getInstance().getCurrentUser().getEmail());
                         homeViewModel.insert(decodedCar);
+                        homeViewModel.deleteNotRecentCars(sharedPreferences.getInt(Constants.RECENT_RECORDS, 5));
                     }
                     //FINAL CAR DETAIL
                     Log.i("CAR", decodedCar.toString());
@@ -143,28 +217,32 @@ public class HomeFragment extends Fragment {
                     bodyClass.setText(decodedCar.getBodyClass());
                     doors.setText(String.valueOf(decodedCar.getDoors()));
                     manufacturer.setText(decodedCar.getManufactureName());
-                    price.setText("TO BE IMPLEMENTED");
+                    price.setText("Tap on the picture to get estimated price.");
                     vinImage.setImageResource(R.drawable.car);
                     carDetailsLayout.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     Toast.makeText(getContext(), "Please try to scan again or enter the VIN in text.", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.INVISIBLE);
+                    shimmerFrameLayout.setVisibility(View.INVISIBLE);
                 }
             }
 
             @Override
             public void onFailure(Call<Car> call, Throwable t) {
-                progressBar.setVisibility(View.INVISIBLE);
+                shimmerFrameLayout.setVisibility(View.INVISIBLE);
                 // Log error here since request failed
             }
         });
     }
 
+    /**
+     * Select image from storage
+     * @param context
+     */
     private void selectImage(Context context) {
         final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Choose your profile picture");
+        builder.setTitle("Capture or Choose a picture of VIN");
         builder.setItems(options, (dialog, item) -> {
 
             if (options[item].equals("Take Photo")) {
@@ -184,8 +262,7 @@ public class HomeFragment extends Fragment {
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 20);
-                }
-                else {
+                } else {
                     FLAG_TAKE_IMAGE = 0;
                     Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     pickPhoto.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -202,21 +279,23 @@ public class HomeFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == 0) {
+        if (requestCode == 10) {
             Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(takePicture, 10);
+            startActivityForResult(takePicture, 0);
         }
 
-        if(requestCode == 1){
+        if (requestCode == 20) {
             Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             pickPhoto.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-            startActivityForResult(pickPhoto, 20);
+            startActivityForResult(pickPhoto, 1);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_CANCELED) {
+            carDetailsLayout.setVisibility(View.INVISIBLE);
+            shimmerFrameLayout.setVisibility(View.VISIBLE);
             switch (requestCode) {
                 case 0:
                     if (resultCode == RESULT_OK && data != null) {
@@ -248,7 +327,10 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Firebase vision api helper to get text from image based on regex
+     * @param image
+     */
     private void recognizeTextCloud(FirebaseVisionImage image) {
         FirebaseVisionCloudTextRecognizerOptions options = new FirebaseVisionCloudTextRecognizerOptions.Builder()
                 .setLanguageHints(Arrays.asList("en", "hi"))
@@ -262,8 +344,6 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onSuccess(FirebaseVisionText result) {
                         for (FirebaseVisionText.TextBlock block : result.getTextBlocks()) {
-                            Rect boundingBox = block.getBoundingBox();
-                            Point[] cornerPoints = block.getCornerPoints();
 
                             for (FirebaseVisionText.Line line : block.getLines()) {
                                 String text = block.getText();
@@ -284,6 +364,7 @@ public class HomeFragment extends Fragment {
                             }
                         }
                         if (!vinScanned) {
+                            shimmerFrameLayout.setVisibility(View.INVISIBLE);
                             Toast.makeText(getContext(), "Please try to scan again or enter the VIN in text.", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -291,4 +372,6 @@ public class HomeFragment extends Fragment {
                 .addOnFailureListener(e -> {
                 });
     }
+
+
 }

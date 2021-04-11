@@ -1,17 +1,22 @@
 package com.example.carpriceestimator.utility;
 
-import android.widget.Toast;
-
 import com.example.carpriceestimator.entity.Car;
 import com.example.carpriceestimator.entity.CarResult;
 import com.example.carpriceestimator.entity.DecodedCar;
-import com.example.carpriceestimator.ui.home.HomeFragment;
 
 import java.util.List;
 
+/**
+ * Utility class to parse vpic api result into required information
+ */
 public class CarDecoder {
     private static DecodedCar decodedCar;
 
+    /**
+     * Utility method to parse car into required info
+     * @param car
+     * @return - Decoded car
+     */
     public static DecodedCar decode(Car car) {
         decodedCar = new DecodedCar();
         List<CarResult> carResults = car.getResults();
@@ -43,8 +48,6 @@ public class CarDecoder {
                     break;
             }
         }
-
-
         return decodedCar;
     }
 }

@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.carpriceestimator.authentication.LoginActivity;
 
+/**
+ * Flash screen activity that appears for 3 seconds to check if there is any logged in user
+ */
 public class FlashScreenActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
@@ -20,19 +23,19 @@ public class FlashScreenActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(Constants.MY_PREFERENCES, MODE_PRIVATE);
 
-         new Handler().postDelayed(() -> {
-             String userEmail = sharedPreferences.getString(Constants.USER_EMAIL, "");
-             boolean invalidSession = userEmail.equals("");
+        new Handler().postDelayed(() -> {
+            String userEmail = sharedPreferences.getString(Constants.USER_EMAIL, "");
+            boolean invalidSession = userEmail.equals("");
 
-             Intent i;
-             if(invalidSession) {
-                 i = new Intent(FlashScreenActivity.this, LoginActivity.class);
-             }else{
-                 i = new Intent(FlashScreenActivity.this, MainActivity.class);
-             }
-             startActivity(i); //start new activity
-             finish();
-         }, 3000);
+            Intent i;
+            if (invalidSession) {
+                i = new Intent(FlashScreenActivity.this, LoginActivity.class);
+            } else {
+                i = new Intent(FlashScreenActivity.this, MainActivity.class);
+            }
+            startActivity(i); //start new activity
+            finish();
+        }, 3000);
 
     }
 }

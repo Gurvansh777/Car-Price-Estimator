@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/image"
     android:backgroundTint="#65000000"
     android:backgroundTintMode="src_over"
     android:foregroundTintMode="src_in"
@@ -15,10 +15,10 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="@font/dancing_script"
+        android:layout_marginBottom="96dp"
+        android:fontFamily="@font/contrail_one"
         android:text="@string/login_start"
-        android:textColor="@color/purple_500"
+        android:textColor="@color/yellow_500"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
@@ -32,12 +32,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:shadowColor="@color/purple_500"
+        android:shadowColor="@color/blue_200"
         android:shadowDx=".5"
         android:shadowDy=".5"
         android:shadowRadius=".5"
         android:text="Existing User? Login Instead"
-        android:textColor="@color/purple_700"
+        android:textColor="@color/yellow_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -65,7 +65,8 @@
                 android:id="@+id/edittextSignUpname"
                 android:layout_width="275dp"
                 android:layout_height="wrap_content"
-                android:hint="Name" />
+                android:hint="Name"
+                android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -81,7 +82,7 @@
                 android:id="@+id/edittextSignUpUsername"
                 android:layout_width="275dp"
                 android:layout_height="wrap_content"
-                android:hint="Username" />
+                android:hint="Email" />
         </com.google.android.material.textfield.TextInputLayout>
 
 

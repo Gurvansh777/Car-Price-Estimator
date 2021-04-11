@@ -4,10 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -16,9 +12,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.carpriceestimator.R;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * This fragment is used to handle forget password
+ */
 public class ForgetPasswordFragment extends Fragment {
     private static final String TAG = "Email :";
     private FirebaseAuth auth;
@@ -53,6 +58,9 @@ public class ForgetPasswordFragment extends Fragment {
                 .navigate(R.id.action_forgetPasswordFragment_to_usernameEmailFragment));
     }
 
+    /**
+     * Method to send reset password email
+     */
     public void ResetPassword() {
         String emailAddress = resetPasswordEmailTextView.getText().toString();
         if(emailAddress.length()>0){
@@ -72,6 +80,10 @@ public class ForgetPasswordFragment extends Fragment {
         }
     }
 
+    /**
+     * Utility method to check netword connection
+     * @return - isConnected
+     */
     public boolean checkConnection(){
         ConnectivityManager connectivityManager = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         connected = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||

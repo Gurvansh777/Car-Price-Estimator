@@ -10,9 +10,9 @@
     android:padding="1dp">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+        android:id="@+id/cardViewDetail"
         android:layout_width="match_parent"
-        android:layout_height="232dp"
+        android:layout_height="200dp"
         android:clipChildren="true"
         app:cardBackgroundColor="@color/ThemeFront"
         app:cardCornerRadius="@dimen/card_view_corner_radius"
@@ -222,28 +222,50 @@
                     android:textAppearance="@style/H3" />
             </LinearLayout>
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/card_back"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/textViewPrice"
-                    android:layout_width="150dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:background="#00FFFFFF"
                     android:alpha="0.75"
-                    android:text="Estimated Price"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:text="Tap on the picture to get estimated price."
                     android:textAppearance="@style/H3" />
 
-                <TextView
-                    android:id="@+id/textViewPriceData"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.75"
-                    android:text=""
-                    android:textAppearance="@style/H3" />
-            </LinearLayout>
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/facebookShimmerLayoutPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/card_back"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/card_details_card"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:layout_editor_absoluteY="381dp">
+
+                    <TextView
+                        android:id="@+id/captionShimmerPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/card_back"
+                        android:text="Tap on the picture to get estimated price."
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:alpha="0.75"
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:textAppearance="@style/H3"/>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+            </FrameLayout>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
